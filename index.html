@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keeper of the Source: The Historical Inquiry Simulator</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-env="title">
+  <!-- Interactive Particle Background Canvas -->
+  <canvas id="fx"></canvas>
+  <div id="vignette"></div>
+  <div id="scan"></div>
+
+  <!-- Screen Wipe Transition -->
+  <div id="wipe">
+    <div class="wipe-content">
+      <span class="wt" id="wipetext">Calibrating Inquiry Friction</span>
+      <div class="wipe-bar"></div>
+    </div>
+  </div>
+
+  <!-- Global Audio Control Button -->
+  <button id="soundBtn" onclick="toggleSound()">SOUND OFF</button>
+
+  <div class="app-container">
+    <!-- ==========================================
+         SCREEN 1: TITLE SCREEN
+         ========================================== -->
+    <section class="screen active" id="titleScreen">
+      <p class="eyebrow">A Social Studies Inquiry & Media Ecology Simulation</p>
+      <h1>Keeper of the Source</h1>
+      <p class="sub">In a frictionless digital age, historical understanding is threatened by instant automated bypass. When AI does the thinking, sourcing, contextualization, and human judgment disappear. As an **Inquiry Architect**, you must design tasks that preserve productive cognitive struggle while removing exclusionary barriers.</p>
+      
+      <div class="messageframe title-message" style="display: flex; gap: 20px; align-items: center;">
+        <i class="fa-solid fa-feather-pointed char-avatar-icon" style="font-size: 2.5rem; color: var(--accent); filter: drop-shadow(0 0 8px rgba(232, 160, 76, 0.4));"></i>
+        <div style="flex-grow: 1;">
+          <div class="mflabel">
+            <span>The Inquiry Architect's Mission &middot; C.O.R.E. and H.E.A.R.T. Calibration</span>
+            <span class="auth">Construct: Inquiry over Retrieval</span>
+          </div>
+          <div class="quote-text">&ldquo;We must teach students how to think, not what to think. Introduce productive difficulty into the inquiry loop so that writing remains the trace of thinking.&rdquo;</div>
+        </div>
+      </div>
+
+      <div class="intro-actions">
+        <button class="btn btn-glow" onclick="startGame()">ENTER THE INQUIRY CRUCIBLE &rarr;</button>
+      </div>
+
+      <p class="credit">Framework inspired by Micah J. Miner's research. Synthesizing media ecology, historical thinking (sourcing, contextualization, corroboration), and pedagogical friction (noetic, rhetorical, existential, and infrastructural axes).</p>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 2: PLAY SCREEN
+         ========================================== -->
+    <section class="screen" id="gameScreen">
+      <!-- HUD Header -->
+      <div class="hud">
+        <div class="hud-top">
+          <span class="phasechip" id="phasechip">Level 1 &middot; Noetic Sourcing</span>
+          <span class="round-counter" id="roundCounter">Stage 1 of 4</span>
+        </div>
+        
+        <div class="hud-stats-grid">
+          <!-- Stat 1: Cognitive Challenge -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <label>COGNITIVE CHALLENGE</label>
+              <span class="stat-num" id="fidnum">0%</span>
+            </div>
+            <div class="bar-container" id="fidbar">
+              <div class="bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="stat-desc">Productive struggle (Target: 50% - 80%)</span>
+          </div>
+
+          <!-- Stat 2: Mechanical Barrier -->
+          <div class="stat-card">
+            <div class="stat-header">
+              <label>MECHANICAL BARRIER</label>
+              <span class="stat-num" id="reachnum">0%</span>
+            </div>
+            <div class="bar-container" id="reachbar">
+              <div class="bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="stat-desc">Exclusionary friction (Target: &lt; 20%)</span>
+          </div>
+
+          <!-- Stat 3: Learning State -->
+          <div class="stat-card author-card" id="authstat">
+            <div class="stat-header">
+              <label>SCHEMA ASSEMBLY</label>
+              <span class="stat-num" id="authnum">Bypassed</span>
+            </div>
+            <div class="author-light-container">
+              <span class="indicator-dot red" id="authindicator"></span>
+              <span class="stat-desc" id="authdesc">No learning taking place</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Game Console -->
+      <div class="game-console">
+        <!-- Tutor Guide Panel -->
+        <div class="character-card glass-subpanel" id="characterCard">
+          <div class="char-avatar-container">
+             <i class="fa-solid fa-scroll" id="charIcon" style="font-size: 2.2rem; color: var(--accent);"></i>
+          </div>
+          <div class="char-info">
+            <h4 class="char-name" id="charName">Inquiry Mentor</h4>
+            <p class="char-dialogue" id="charDialogue">Welcome to the Inquiry Crucible. Let's calibrate this environment to ensure students engage in genuine historical thinking.</p>
+          </div>
+        </div>
+
+        <!-- Interactive Game Viewport -->
+        <div class="viewport-wrapper">
+          <div class="viewport-title" id="viewportTitle">Inquiry Workspace</div>
+          <div class="game-viewport" id="gameViewport">
+            <!-- Dynamically injected level controls and activities -->
+          </div>
+        </div>
+
+        <!-- Metric Feedback Dashboard -->
+        <div class="messageframe game-message-frame">
+          <div class="mflabel">
+            <span>Historical Inquiry Assessment</span>
+            <span class="auth" id="authflag">Status: uncalibrated</span>
+          </div>
+          <div id="headline" class="message-headline">Frictionless Bypass Mode Active</div>
+          <div id="messageText" class="message-body">Adjust parameters to ensure the student engages in effortful schema construction while remaining supported.</div>
+        </div>
+
+        <!-- Control & Action Panel -->
+        <div class="control-panel">
+          <h2 id="roundtitle">Calibration Console</h2>
+          <p class="prompt" id="roundprompt">Drag the sliders or select the design nodes to balance struggle and access.</p>
+          
+          <!-- Choices or Sliders injected here -->
+          <div class="opts" id="opts"></div>
+
+          <!-- Output Feedback -->
+          <div class="outcome" id="outcome"></div>
+
+          <!-- Proceed Row -->
+          <div class="nextrow" id="nextrow">
+            <button class="btn" id="nextbtn" onclick="advance()">CONTINUE CALIBRATION &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 3: FINALE SCREEN
+         ========================================== -->
+    <section class="screen" id="finaleScreen">
+      <p class="eyebrow">Crucible Complete</p>
+      <h2 id="endtitle">Inquiry Architect Certified</h2>
+      
+      <div class="messageframe final-message" style="display: flex; gap: 20px; align-items: center;">
+        <i class="fa-solid fa-award" style="font-size: 3rem; color: var(--accent); filter: drop-shadow(0 0 10px rgba(232, 160, 76, 0.4));"></i>
+        <div style="flex-grow: 1;">
+          <div class="mflabel" id="endauth">DESIGN CERTIFICATE: APPROVED</div>
+          <div class="message-body" id="endmessage">You have calibrated the historical inquiry sequence successfully across Noetic, Rhetorical, Existential, and Infrastructural levels.</div>
+        </div>
+      </div>
+
+      <div class="scoreline">
+        <div class="score-card">
+          <span class="label">MEAN CHALLENGE</span>
+          <span class="val" id="endfid">0%</span>
+        </div>
+        <div class="score-card">
+          <span class="label">MEAN ACCESSIBILITY</span>
+          <span class="val" id="endreach">0%</span>
+        </div>
+        <div class="score-card">
+          <span class="label">SCHEMA INTEGRITY</span>
+          <span class="val" id="endauthor">Low</span>
+        </div>
+      </div>
+
+      <p class="thesis" id="endthesis">A calibrated curriculum preserves productive cognitive struggle (desirable difficulties) while dismantling exclusionary systemic barriers.</p>
+      
+      <div class="thesis" style="border-color:#2dd4bf; background:rgba(45,212,191,0.04)">
+        Friction is not a technological bug to be smoothed away by automated writing systems. It is the core resistance that makes human historical understanding and civic reasoning durable. By maintaining critical friction (sourcing analysis, dialogic peer review, and authorial accountability) and easing barriers (language scaffolds or transcription tools), educators preserve the trace of human thinking.
+      </div>
+
+      <div class="navrow">
+        <button class="btn" onclick="go('deepScreen','end')">PLAY ACADEMIC SANDBOX &rarr;</button>
+        <button class="btn ghost" onclick="location.reload()">RE-CALIBRATE ENVIRONMENT</button>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 4: DEEP DIVE & ACADEMIC SANDBOX
+         ========================================== -->
+    <section class="screen" id="deepScreen">
+      <p class="eyebrow">Academic Deep Dive</p>
+      <h2>The Social Studies Friction Framework</h2>
+      
+      <div class="tablescroll">
+        <table class="summary">
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Inquiry Move</th>
+              <th>C.O.R.E. / H.E.A.R.T. Target</th>
+              <th>Threatened By (Bypass)</th>
+              <th>Preservation Strategy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Noetic Friction</td>
+              <td>Sourcing Analysis</td>
+              <td>Critical Thinking &amp; Honesty</td>
+              <td>Noetic displacement: instant summaries hide source omissions and bias.</td>
+              <td>Algorithm audits: have students annotate primary sources before comparing AI text.</td>
+            </tr>
+            <tr>
+              <td>Rhetorical Friction</td>
+              <td>Contextualization</td>
+              <td>Openness, Respect &amp; Empathy</td>
+              <td>Rhetorical saturation: compliant AI dialogues replace peer dissent.</td>
+              <td>Socratic seminars, peer panels, and testing AI-generated viewpoints.</td>
+            </tr>
+            <tr>
+              <td>Existential Friction</td>
+              <td>Corroboration</td>
+              <td>Engagement &amp; Accountability</td>
+              <td>Existential abstraction: claims detached from an accountable author.</td>
+              <td>Revision logs, signature commits, and oral defenses of evidence chains.</td>
+            </tr>
+            <tr>
+              <td>Infrastructural Friction</td>
+              <td>Argumentation</td>
+              <td>Responsibility &amp; Trust</td>
+              <td>Technical compliance: policies that focus on bans/detection rather than learning.</td>
+              <td>Friction-friendly grading rubrics evaluating revision processes and growth.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Interactive sorting game: Scenario Calibrator Sort -->
+      <div class="sortcard glass-panel">
+        <div class="sort-header">
+          <h3>Interactive Sandbox Quiz: Match the Friction Move</h3>
+          <span class="counter" id="sortcounter">SCENARIO 1 OF 10</span>
+        </div>
+        <p class="scenario" id="scenariotext">Loading scenario...</p>
+        <div class="phasebtns" id="phasebtns">
+          <!-- Injected by JS -->
+        </div>
+        <div class="sortfeedback" id="sortfeedback"></div>
+        <div class="scorebar-container">
+          <div class="scorebar" id="scorebar">SCORE: 0 / 0</div>
+          <button class="btn btn-glow" id="sortnext" onclick="nextScenario()" style="display:none">NEXT SCENARIO &rarr;</button>
+        </div>
+      </div>
+
+      <div class="navrow">
+        <button class="btn ghost" onclick="location.reload()">BACK TO TITLE SCREEN</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
