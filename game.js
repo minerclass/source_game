@@ -4,6 +4,13 @@
 
 "use strict";
 
+function handleKeySelect(e, callback, arg) {
+  if (e.key === " " || e.key === "Enter") {
+    e.preventDefault();
+    callback(arg);
+  }
+}
+
 // Game State
 const state = {
   screen: "title",
@@ -287,6 +294,17 @@ class ParticleEngine {
 
   update() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      for (let p of this.particles) {
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        this.ctx.fillStyle = p.color;
+        this.ctx.fill();
+      }
+      return;
+    }
     
     for (let p of this.particles) {
       p.x += p.speedX;
@@ -622,9 +640,9 @@ function buildLevel1(viewport, opts) {
   const essay = document.createElement("div");
   essay.className = "essay-pane";
   essay.innerHTML = `
-    <div class="essay-para">The Stamp Act was passed by Britain. In response, <span class="bypass-word" id="zone1" onclick="selectZone('zone1')">[Bypass Zone: Unified Merchant Agreement]</span>.</div>
-    <div class="essay-para">All colonials formed <span class="bypass-word" id="zone2" onclick="selectZone('zone2')">[Bypass Zone: Simple Patriot Protest]</span>, and taxation was resolved cleanly.</div>
-    <div class="essay-para">Furthermore, historical records show <span class="bypass-word" id="zone3" onclick="selectZone('zone3')">[Bypass Zone: Forgotten Enslaved Stances]</span>, keeping the story centered on elites.</div>
+    <div class="essay-para">The Stamp Act was passed by Britain. In response, <span class="bypass-word" id="zone1" tabindex="0" role="button" onclick="selectZone('zone1')" onkeydown="handleKeySelect(event, selectZone, 'zone1')">[Bypass Zone: Unified Merchant Agreement]</span>.</div>
+    <div class="essay-para">All colonials formed <span class="bypass-word" id="zone2" tabindex="0" role="button" onclick="selectZone('zone2')" onkeydown="handleKeySelect(event, selectZone, 'zone2')">[Bypass Zone: Simple Patriot Protest]</span>, and taxation was resolved cleanly.</div>
+    <div class="essay-para">Furthermore, historical records show <span class="bypass-word" id="zone3" tabindex="0" role="button" onclick="selectZone('zone3')" onkeydown="handleKeySelect(event, selectZone, 'zone3')">[Bypass Zone: Forgotten Enslaved Stances]</span>, keeping the story centered on elites.</div>
   `;
   
   // Right side: original sources
@@ -636,7 +654,10 @@ function buildLevel1(viewport, opts) {
     const card = document.createElement("div");
     card.className = "source-card";
     card.id = `card-${key}`;
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
     card.onclick = () => selectCard(key);
+    card.onkeydown = (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); selectCard(key); } };
     card.innerHTML = `
       <span class="source-label">${src.source}</span>
       <span class="source-snippet">${src.text}</span>
@@ -878,8 +899,11 @@ function buildLevel3(viewport, opts) {
     if (idx === 0) return; // Hide first option from log list
     const rItem = document.createElement("div");
     rItem.className = "rev-item";
+    rItem.tabIndex = 0;
+    rItem.setAttribute("role", "button");
     rItem.innerText = `Claim v${idx + 1}: ${rev.text.split(":")[1]}`;
     rItem.onclick = () => selectL3Rev(idx, rItem);
+    rItem.onkeydown = (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); selectL3Rev(idx, rItem); } };
     revList.appendChild(rItem);
   });
   
