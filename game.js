@@ -569,6 +569,10 @@ function updateHUD() {
 function startGame() {
   state.level = 1;
   state.levelAnswers = [];
+  currentProfileIdx = 0;
+  const nextBtn = document.getElementById("nextbtn");
+  nextBtn.innerText = "CONTINUE CALIBRATION →";
+  nextBtn.onclick = advance;
   go("gameScreen", "noetic");
   loadLevel();
 }
@@ -1058,7 +1062,7 @@ function checkL4Calibration() {
     document.getElementById("outcome").style.color = "var(--good)";
     playSuccessArpeggio();
 
-    state.levelAnswers.push({ assist, struggle });
+    state.levelAnswers.push({ assist, struggle, profileIdx: currentProfileIdx });
 
     // Move to next profile or finish
     if (currentProfileIdx < studentProfiles.length - 1) {
@@ -1130,23 +1134,33 @@ function advance() {
 }
 
 function finishGame() {
-  // Calculate average stats
+  // Calculate average stats across every recorded answer (Levels 1-3 plus one
+  // entry per Level 4 profile), not a hardcoded count of 4.
   let totalChallenge = 0;
   let totalBarrier = 0;
+  let barrierCount = 0;
 
   state.levelAnswers.forEach(ans => {
     if (ans.challenge !== undefined) {
       totalChallenge += ans.challenge;
       totalBarrier += ans.barrier;
+      barrierCount++;
     } else {
-      // Level 4 maps struggle to challenge, and 100-assist to barrier
+      // Level 4 maps struggle to challenge, and 100-assist to barrier.
+      // A profile whose calibrated target is LOW assist (e.g. the frictionless-
+      // bypass student) is restricting AI generation, not raising an access
+      // barrier — so it stays out of the accessibility mean.
       totalChallenge += ans.struggle;
-      totalBarrier += (100 - ans.assist);
+      const profile = studentProfiles[ans.profileIdx];
+      if (profile && profile.targetAssist >= 50) {
+        totalBarrier += (100 - ans.assist);
+        barrierCount++;
+      }
     }
   });
 
-  state.meanChallenge = Math.round(totalChallenge / 4);
-  const meanAccess = Math.round(100 - (totalBarrier / 4));
+  state.meanChallenge = Math.round(totalChallenge / state.levelAnswers.length);
+  const meanAccess = Math.round(100 - (totalBarrier / barrierCount));
   state.meanAccessibility = meanAccess;
 
   if (state.meanChallenge >= 55 && state.meanChallenge <= 80 && meanAccess >= 75) {
