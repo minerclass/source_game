@@ -44,7 +44,7 @@ const levels = {
     name: "Level 1 &middot; Noetic Sourcing",
     env: "noetic",
     tutor: "Socrates the Archivist",
-    avatar: "fa-scroll",
+    avatar: "📜",
     dialogue: "Look at the S.M.O.O.T.H. Engine's record of the Stamp Act. It claims all colonists reacted with unified, peaceful patriotism. That is too clean. Introduce noetic struggle by auditing this text with primary source fragments.",
     title: "Sourcing Audit",
     prompt: "Audit the AI summary. Click on a red dashed 'Bypass Zone' in the essay, then select the matching Primary Source Fragment to resolve the flattened narrative.",
@@ -54,7 +54,7 @@ const levels = {
     name: "Level 2 &middot; Rhetorical Contextualization",
     env: "rhetorical",
     tutor: "Sophia of the Agora",
-    avatar: "fa-users-line",
+    avatar: "👥",
     dialogue: "Our student is using a compliant AI chat partner that agrees with everything they write. This creates 'rhetorical saturation'—a frictionless echo chamber. Let's inject peer friction into this Socratic Seminar table.",
     title: "Socratic Dialogic Table",
     prompt: "Choose the C.O.R.E. prompts (Critical Thinking, Openness, Respect, Engagement) to challenge the student's claims and break the synthetic consensus.",
@@ -64,7 +64,7 @@ const levels = {
     name: "Level 3 &middot; Existential Corroboration",
     env: "existential",
     tutor: "Covenant Guardian",
-    avatar: "fa-feather",
+    avatar: "✒️",
     dialogue: "We must restore the student's personal stakes in the argument. The AI has offered to auto-write their final letter to the editor. Redesign this exit move: demand a revision history and an authorial signature to commit to their claims.",
     title: "The Authorial Desk",
     prompt: "Audit the revision timeline to match the claim changes, then type your signature to commit to the historical argument.",
@@ -74,7 +74,7 @@ const levels = {
     name: "Level 4 &middot; Infrastructural Policy",
     env: "infrastructural",
     tutor: "Director of Curricula",
-    avatar: "fa-screwdriver-wrench",
+    avatar: "🛠️",
     dialogue: "The final barrier is system-wide. We must configure school AI policies to support equity and access without enabling cognitive bypass. Calibrate task settings for three distinct student profiles.",
     title: "Inquiry Calibration Lab",
     prompt: "Adjust the Sliders (Challenge vs. Accessibility) for each student profile to ensure effortful schema assembly.",
@@ -585,7 +585,7 @@ function loadLevel() {
   document.getElementById("roundCounter").innerText = `Stage ${state.level} of 4`;
   document.getElementById("charName").innerText = lvl.tutor;
   document.getElementById("charDialogue").innerText = lvl.dialogue;
-  document.getElementById("charIcon").className = `fa-solid ${lvl.avatar}`;
+  document.getElementById("charIcon").innerText = lvl.avatar;
   document.getElementById("roundtitle").innerText = lvl.title;
   document.getElementById("roundprompt").innerText = lvl.prompt;
   
@@ -782,7 +782,7 @@ function buildLevel2(viewport, opts) {
   for (let i = 0; i < 6; i++) {
     const seat = document.createElement("div");
     seat.className = `seat seat-${i}`;
-    seat.innerHTML = `<i class="fa-solid fa-user"></i>`;
+    seat.innerHTML = `<span class="unicode-icon" style="font-size: 1.2rem;">👤</span>`;
     table.appendChild(seat);
   }
   container.appendChild(table);
@@ -999,7 +999,7 @@ function buildLevel4(viewport, opts) {
     card.id = `prof-${idx}`;
     card.innerHTML = `
       <div class="prof-header">
-        <div class="prof-icon"><i class="fa-solid fa-user-graduate"></i></div>
+        <div class="prof-icon"><span class="unicode-icon" style="font-size: 1.2rem;">🎓</span></div>
         <span class="prof-name">${prof.name}</span>
       </div>
       <div class="prof-desc">${prof.desc}</div>
