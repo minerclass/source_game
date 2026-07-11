@@ -510,9 +510,13 @@ function updateHUD() {
   // Update HUD Sliders / Bars
   document.getElementById("fidnum").innerText = `${state.stats.challenge}%`;
   document.getElementById("fidbar").querySelector(".bar-fill").style.width = `${state.stats.challenge}%`;
+  document.getElementById("fidbar").setAttribute("aria-valuenow", state.stats.challenge);
+  document.getElementById("fidbar").setAttribute("aria-valuetext", "Cognitive Challenge: " + state.stats.challenge + " percent");
 
   document.getElementById("reachnum").innerText = `${state.stats.barrier}%`;
   document.getElementById("reachbar").querySelector(".bar-fill").style.width = `${state.stats.barrier}%`;
+  document.getElementById("reachbar").setAttribute("aria-valuenow", state.stats.barrier);
+  document.getElementById("reachbar").setAttribute("aria-valuetext", "Mechanical Barrier: " + state.stats.barrier + " percent");
 
   // Calculate Schema Assembly
   const challenge = state.stats.challenge;

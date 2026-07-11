@@ -25,3 +25,10 @@ Player calibrates pedagogical friction across four levels (Noetic, Rhetorical, E
 - [x] Character icons (feather, scroll, award, seats, graduate profiles) render using inline Unicode symbols
 - [x] Browser playthrough confirms zero external network requests on load
 - [x] Playthrough and replay cycle succeed with zero console errors
+
+## Phase 4 - 2026-07-11
+
+- Added named ARIA progressbars for Cognitive Challenge and Mechanical Barrier.
+- JavaScript syntax check passed.
+- Browser smoke checks found zero console errors and no horizontal overflow at desktop or 390px phone width.
+- Level 1 source sentences and citations were intentionally held for chronology and citation approval.
