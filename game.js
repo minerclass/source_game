@@ -45,9 +45,9 @@ const levels = {
     env: "noetic",
     tutor: "Socrates the Archivist",
     avatar: "📜",
-    dialogue: "Look at the S.M.O.O.T.H. Engine's record of the Stamp Act. It claims all colonists reacted with unified, peaceful patriotism. That is too clean. Introduce noetic struggle by auditing this text with primary source fragments.",
-    title: "Sourcing Audit",
-    prompt: "Audit the AI summary. Click on a red dashed 'Bypass Zone' in the essay, then select the matching Primary Source Fragment to resolve the flattened narrative.",
+    dialogue: "The S.M.O.O.T.H. Engine has flattened a decade of colonial resistance — 1765 to 1773 — into three tidy claims. None of them are quotations; they are simulated AI flattening. Audit each claim against a primary source: ask who is speaking, when, and whose liberty they mean.",
+    title: "Colonial Resistance and Liberty Claims, 1765–1773",
+    prompt: "Audit the simulated AI claims. Select a claim, then select the primary source whose evidence complicates it. Dates and speakers matter.",
     options: []
   },
   2: {
@@ -622,21 +622,35 @@ function loadLevel() {
 // LEVEL 1: NOETIC SOURCING AUDIT
 // --------------------------------------------------------------------------
 let activeZoneId = null;
+// Level 1 frame: Colonial Resistance and Liberty Claims, 1765–1773.
+// Claims are SIMULATED AI FLATTENING written for this activity — not quotations.
+// Source records verified 2026-07-11 (see BUILD_LOG.md): Avalon Project (Yale Law
+// School) for zone1/zone2; Massachusetts Historical Society Collections Online
+// (item 443) for zone3. Paraphrases only; no invented quotations.
 const l1Sources = {
   zone1: {
-    source: "Boston Merchant Petition (1765)",
-    text: "Colonial merchants warn of severe trade disruptions, protesting the tax as an unconstitutional assault on commerce.",
-    correct: "commercial opposition"
+    claim: "Colonial merchants opposed British taxes for the same reasons and with the same priorities as every other protester.",
+    source: "Boston Non-Importation Agreement",
+    date: "August 1, 1768",
+    text: "Boston merchants pledge to suspend most British imports for a year and to boycott dutied goods until the revenue acts are repealed — citing scarce money, customs duties, war-debt taxes, and restrictions pressing on their trade.",
+    resolve: "The agreement's own language grounds merchant opposition in commercial conditions and commercial remedies — scarce money, duties, restricted trade. Historians debate (it is genuinely contested) how far merchant motives were constitutional principle versus business interest; either way, the document shows priorities that do not simply mirror every other protester's.",
+    offHint: "This 1768 agreement records merchant commitments about imports and trade. Re-read the claim you selected — is it about commercial motives?"
   },
   zone2: {
-    source: "Stamp Act Congress Resolves",
-    text: "Delegates argue that parliament cannot tax colonists who have no representatives. Crucial constitutional resistance.",
-    correct: "legal protests"
+    claim: "Colonial resistance was one spontaneous patriotic protest rather than a coordinated legal and intercolonial argument.",
+    source: "Stamp Act Congress Resolutions",
+    date: "October 19, 1765",
+    text: "Delegates from nine colonies resolve that taxes may be levied only with colonial consent through their own representatives, that distance makes representation in the House of Commons impossible, and that trial by jury is an essential right.",
+    resolve: "A formal congress of nine colonies issuing reasoned constitutional resolutions is coordination — legal, intercolonial, and deliberate. The record undercuts the picture of a single spontaneous patriotic outburst. (The Avalon Project catalogs this document as “Resolutions of the Continental Congress, October 19, 1765.”)",
+    offHint: "These October 1765 resolutions are a formal constitutional statement issued by a congress of colonies. Does the claim you selected concern how organized the resistance was?"
   },
   zone3: {
-    source: "Petition of Enslaved Colonists (Boston)",
-    text: "Enslaved Bostonians petition the Governor, noting that fighting for freedom from Britain exposes the hypocrisy of keeping them in chains.",
-    correct: "enslaved requests"
+    claim: "Colonial demands for liberty represented everyone living in Massachusetts.",
+    source: "Circular Letter of Enslaved Petitioners, Boston",
+    date: "April 20, 1773",
+    text: "Writing “in behalf of our fellow slaves in this province,” Peter Bestes, Sambo Freeman, Felix Holbrook, and Chester Joie tell each town's representative that the legislature's efforts to free themselves from slavery give hope to those who remain actually enslaved.",
+    resolve: "The petitioners turn the province's own liberty language back on it: people who were actually enslaved point out that Massachusetts' “freedom from slavery” rhetoric does not include them. Liberty claims did not speak for everyone — and in 1773, years after the Stamp Act crisis, the excluded made that argument themselves.",
+    offHint: "This 1773 circular speaks for people the other documents do not. Whose liberty does the claim you selected assume?"
   }
 };
 
@@ -644,19 +658,23 @@ function buildLevel1(viewport, opts) {
   const container = document.createElement("div");
   container.className = "l1-container";
   
-  // Left side: AI text with bypass highlights
+  // Left side: simulated flattened AI claims to be audited
   const essay = document.createElement("div");
   essay.className = "essay-pane";
-  essay.innerHTML = `
-    <div class="essay-para">The Stamp Act was passed by Britain. In response, <span class="bypass-word" id="zone1" tabindex="0" role="button" onclick="selectZone('zone1')" onkeydown="handleKeySelect(event, selectZone, 'zone1')">[Bypass Zone: Unified Merchant Agreement]</span>.</div>
-    <div class="essay-para">All colonials formed <span class="bypass-word" id="zone2" tabindex="0" role="button" onclick="selectZone('zone2')" onkeydown="handleKeySelect(event, selectZone, 'zone2')">[Bypass Zone: Simple Patriot Protest]</span>, and taxation was resolved cleanly.</div>
-    <div class="essay-para">Furthermore, historical records show <span class="bypass-word" id="zone3" tabindex="0" role="button" onclick="selectZone('zone3')" onkeydown="handleKeySelect(event, selectZone, 'zone3')">[Bypass Zone: Forgotten Enslaved Stances]</span>, keeping the story centered on elites.</div>
-  `;
-  
-  // Right side: original sources
+  let claimsHtml = `<p class="claims-kicker">Simulated flattened AI claims — generated for this audit, not historical quotations</p>`;
+  let claimNum = 0;
+  Object.keys(l1Sources).forEach(key => {
+    claimNum++;
+    const c = l1Sources[key];
+    claimsHtml += `
+    <div class="essay-para"><span class="bypass-word claim-block" id="${key}" tabindex="0" role="button" aria-label="Simulated AI claim ${claimNum}: ${c.claim}" onclick="selectZone('${key}')" onkeydown="handleKeySelect(event, selectZone, '${key}')"><span class="claim-tag">Simulated AI claim ${claimNum}</span><span class="claim-text">${c.claim}</span></span></div>`;
+  });
+  essay.innerHTML = claimsHtml;
+
+  // Right side: verified primary sources with visible dates
   const sources = document.createElement("div");
   sources.className = "sources-pane";
-  
+
   Object.keys(l1Sources).forEach(key => {
     const src = l1Sources[key];
     const card = document.createElement("div");
@@ -664,10 +682,12 @@ function buildLevel1(viewport, opts) {
     card.id = `card-${key}`;
     card.tabIndex = 0;
     card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Primary source: ${src.source}, ${src.date}`);
     card.onclick = () => selectCard(key);
     card.onkeydown = (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); selectCard(key); } };
     card.innerHTML = `
       <span class="source-label">${src.source}</span>
+      <span class="source-date">${src.date}</span>
       <span class="source-snippet">${src.text}</span>
     `;
     sources.appendChild(card);
@@ -678,7 +698,7 @@ function buildLevel1(viewport, opts) {
   viewport.appendChild(container);
 
   // Set initial level controls (Instruction text)
-  opts.innerHTML = `<p style="font-size:0.85rem; color:var(--dim)">Click a red <span style="color:var(--bad)">Bypass Zone</span> in the document, then click the correct <span style="color:var(--accent)">Primary Source Card</span> to overlay it and resolve the automated bypass.</p>`;
+  opts.innerHTML = `<p style="font-size:0.85rem; color:var(--dim)">These three <span style="color:var(--bad)">claims are simulated AI flattening</span> — not quotations. Select a claim, then select the <span style="color:var(--accent)">primary source</span> whose evidence complicates it. Read the cards closely: dates and speakers matter, and labels alone will not give the answer away. Keyboard: Tab to a claim or card, then Enter or Space.</p>`;
 
   state.stats.challenge = 15;
   state.stats.barrier = 10;
@@ -702,18 +722,21 @@ function selectCard(cardKey) {
   }
 
   if (activeZoneId === cardKey) {
-    // Correct Match
+    // Correct Match — keep the claim visible and attach interpretive resolution,
+    // so the player sees HOW the evidence complicates the claim (not just a title).
+    const src = l1Sources[cardKey];
     const zone = document.getElementById(activeZoneId);
-    zone.innerText = l1Sources[cardKey].source;
-    zone.className = "bypass-word resolved";
-    
+    zone.innerHTML = `<span class="claim-tag">Claim audited &middot; ${src.source} (${src.date})</span><span class="claim-text">${src.claim}</span><span class="claim-resolution">${src.resolve}</span>`;
+    zone.className = "bypass-word claim-block resolved";
+    zone.setAttribute("aria-label", `Audited claim: ${src.claim} Complicated by ${src.source}, ${src.date}.`);
+
     const card = document.getElementById(`card-${cardKey}`);
     card.style.opacity = "0.4";
     card.style.pointerEvents = "none";
     card.classList.remove("active-drag");
 
     activeZoneId = null;
-    document.getElementById("outcome").innerText = "Primary source integrated! Noetic friction updated.";
+    document.getElementById("outcome").innerText = `Claim audited against the ${src.source} (${src.date}). Noetic friction updated.`;
     document.getElementById("outcome").style.color = "var(--good)";
 
     state.stats.challenge += 22;
@@ -724,13 +747,15 @@ function selectCard(cardKey) {
     // Check level win
     const unresolved = document.querySelectorAll(".bypass-word:not(.resolved)");
     if (unresolved.length === 0) {
-      document.getElementById("outcome").innerText = "Calibration Complete! All source bypasses audited successfully.";
+      document.getElementById("outcome").innerText = "Sourcing audit complete — all three flattened claims are now complicated by primary evidence.";
       state.stats.challenge = 75;
       state.stats.barrier = 5;
       updateHUD();
     }
   } else {
-    document.getElementById("outcome").innerText = "This primary source does not complicate that specific bypass zone. Try again!";
+    // Useful, source-aware feedback; the claim stays selected and unresolved.
+    const src = l1Sources[cardKey];
+    document.getElementById("outcome").innerText = `The ${src.source} (${src.date}) does not resolve that claim. ${src.offHint}`;
     document.getElementById("outcome").style.color = "var(--bad)";
     playFailureNoise();
   }

@@ -785,6 +785,66 @@ h1 {
   color: var(--dim);
 }
 
+.source-date {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Level 1 revision: simulated AI claims presented as auditable blocks */
+.claims-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bad);
+  opacity: 0.85;
+  margin: 0 0 12px;
+}
+
+.bypass-word.claim-block {
+  display: block;
+  padding: 10px 12px;
+  border: 1px dashed rgba(239, 68, 68, 0.4);
+  border-radius: 8px;
+}
+
+.bypass-word.claim-block.resolved {
+  border: 1px solid var(--good);
+}
+
+.claim-block .claim-tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bad);
+  margin-bottom: 5px;
+}
+
+.claim-block.resolved .claim-tag {
+  color: var(--good);
+}
+
+.claim-block .claim-text {
+  display: block;
+}
+
+.claim-resolution {
+  display: block;
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--dim);
+}
+
 /* ==========================================================================
    LEVEL 2 VIEWPORT ELEMENTS
    ========================================================================== */
