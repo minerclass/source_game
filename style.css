@@ -1382,3 +1382,37 @@ table.summary tr td:first-child {
     grid-template-columns: 1fr;
   }
 }
+
+/* Keyboard focus indication. This stylesheet had no :focus rules at all, while
+   .range-input and .sig-input both set outline: none on the element itself, so
+   keyboard users had no way to see where they were. .sig-input additionally has
+   border: none, leaving a text field with no focus affordance whatsoever. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.range-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* .sig-input sits on a light card, where the amber accent would be hard to see;
+   it gets a dark ring matching its own text colour instead. */
+.sig-input:focus-visible {
+  outline: 2px solid #1e1b4b;
+  outline-offset: 2px;
+}
+
+/* Honour a reduced-motion preference. This page animates and the preference was
+   previously ignored, so motion-sensitive visitors got the full effect. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
