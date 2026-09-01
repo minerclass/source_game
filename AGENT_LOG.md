@@ -19,6 +19,22 @@ here, in the repository, not in a local file.
 
 ---
 
+## 2026-08-31 - Adopt the shared ink; ground kept local on purpose
+
+Links the shared token file and points `--text` and `--dim` at the shared ink and muted
+values, each with its pre-adoption fallback.
+
+**The ground is deliberately not adopted.** This game re-themes itself per level through
+`body[data-env]`, and the deep ground plus its per-level radial gradients carry that
+atmosphere. Taking a single shared ground would flatten the thing the game uses to signal
+where you are.
+
+**Verified against every per-level gradient stop**, including the lightest (`#1e1b4b`):
+`--text` moves from 14.53 to 13.78 and `--dim` from 6.3 to **7.1**, so the muted text is
+actually better off. Nothing on the page drops near the 4.5 threshold.
+
+---
+
 ## 2026-08-31 - Restore keyboard focus indication and honour prefers-reduced-motion
 
 Found during an accessibility sweep across the dissertation ecosystem.

@@ -4,9 +4,12 @@
 
 :root {
   /* Color Palette */
+  /* Ground left local on purpose: this game re-themes itself per level via
+     body[data-env] and the deep ground carries that atmosphere. Only the text
+     colours join the shared ink, each with its pre-adoption fallback. */
   --bg-deep: #05080c;
-  --text: #f3f4f6;
-  --dim: #9ca3af;
+  --text: var(--mjm-ink, #f3f4f6);
+  --dim: var(--mjm-muted, #9ca3af);
   --dim-dark: #1f2937;
   
   --good: #10b981; /* Emerald for Calibrated */
