@@ -1219,6 +1219,13 @@ function buildSandboxQuiz() {
   currentScenarioIdx = 0;
   sandboxScore = 0;
   answeredScenarios = 0;
+  // Shuffle each scenario's options so the correct one is not always first.
+  scenarios.forEach((scen) => {
+    for (let i = scen.options.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [scen.options[i], scen.options[j]] = [scen.options[j], scen.options[i]];
+    }
+  });
   loadScenario();
 }
 
@@ -1300,4 +1307,6 @@ window.addEventListener("DOMContentLoaded", () => {
   particleEngine = new ParticleEngine(bgCanvas);
   particleEngine.init("title");
   startGameLoop();
+  // The sandbox quiz was never started, so it stayed on "Loading scenario...".
+  buildSandboxQuiz();
 });
